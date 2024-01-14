@@ -235,7 +235,6 @@ class ShapePainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..strokeCap = StrokeCap.round;
     for (var center in centers) {
-      print(center);
       RRect fullrect1 = RRect.fromRectAndRadius(
         Rect.fromCenter(
             center: center.$1, width: 10, height: center.$2 * size.height / 2),
@@ -243,7 +242,6 @@ class ShapePainter extends CustomPainter {
       );
       canvas.drawRRect(fullrect1, paint);
     }
-    print("\n");
     if (swapp != null) {
       swap(
           center1: swapp!.$1,
