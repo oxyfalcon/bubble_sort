@@ -1,0 +1,129 @@
+View:
+  header:
+    title: "Footer"
+  onLoad:
+    invokeAPI:
+      name: getPeople
+
+  body:
+    Column:
+      styles:
+        scrollable: true
+      children:
+        - ListView:
+            # id: listView
+
+            onPullToRefresh:
+              invokeAPI:
+                name: getPeople
+            onItemTap:
+              navigateScreen:
+                name: ListView - Detail Page
+                inputs:
+                  doc_type: ${getPeople.body.users[this.selectedItemIndex]}
+
+            styles: { expanded: true }
+            item-template:
+              data: ${getPeople.body.users}
+              name: users
+              template:
+                MyRow:
+                  inputs:
+                    p: ${users}
+  footer:
+    id: footerID
+    styles:
+      backgroundColor: amber
+      borderColor: black
+      borderWidth: 2
+    dragOptions:
+      maxSize: 0.8
+      minSize: 0.4
+      initialSize: 0.4
+      enable: true
+      enableDragHandler: true
+
+    children:
+      - Stack:
+          children:
+            - Column:
+                styles:
+                  crossAxis: center
+                  scrollable: true
+                onPullToRefresh: |
+                  console.log("Hello World")
+                children:
+                  - CustomList
+                  - ListView:
+                      id: listView
+                      # styles:
+                      #   expanded: true
+                      controller: ${footerID.scrollBehaviour}
+                      onPullToRefresh:
+                        invokeAPI:
+                          name: getPeople
+                      item-template:
+                        data: ${getPeople.body.users}
+                        name: users
+                        template:
+                          MyRow:
+                            inputs:
+                              p: ${users}
+                  - Column:
+                      styles:
+                        crossAxis: center
+                      children:
+                        - Button:
+                            label: Hello 1
+                        - Button:
+                            label: Hello 2
+
+CustomList:
+  body:
+    ListView:
+      # styles:
+      #   expanded: true
+      # controller: ${footerID.scrollBehaviour}
+      onPullToRefresh:
+        invokeAPI:
+          name: getPeople
+      item-template:
+        data: ${getPeople.body.users}
+        name: users
+        template:
+          MyRow:
+            inputs:
+              p: ${users}
+
+MyRow:
+  inputs:
+    - p
+  body:
+    Column:
+      children:
+        - Row:
+            styles:
+              gap: 12
+              crossAxis: center
+              padding: 8 0
+            children:
+              - Image:
+                  styles: { width: 50, height: 50, borderRadius: 50 }
+                  source: ${p.image}
+              - Column:
+                  styles: { gap: 2 }
+                  children:
+                    - Text:
+                        styles: { fontWeight: bold }
+                        text: ${p.firstName} ${p.lastName}
+                    - Text:
+                        text: ${p.email}
+              - Spacer
+              - Icon:
+                  icon: chevron_right
+                  styles: { size: 20, color: black }
+
+API:
+  getPeople:
+    uri: https://dummyjson.com/users
+    method: GET
